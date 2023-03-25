@@ -12,12 +12,22 @@
   display: none;
 }
 .reactionTestBox {
-  width: 100%;
+  display: flex;
+  width: 80%;
   height: 300px;
-  background-color: gray;
+  background-color: lightcoral;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  font-weight: bold;
+  cursor: pointer;
 }
-#clickNow {
-  width: 100%;
-  height: 300px;
+.clickNow {
   background-color: lightgreen;
+}
+.timeResult {
+  background-color: skyblue;
+}
+#reactionTest {
+  text-align: center;
 }
