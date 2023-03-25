@@ -2,6 +2,9 @@ const main = document.querySelector(".main");
 const reactionTestButton = document.querySelector("#reactionTestButton");
 const testStart = document.querySelector("#testStart");
 const reactionTest = document.querySelector("#reactionTest");
+const progress = document.querySelector("#progress");
+const progressState = document.querySelector("#progressState");
+const progressBar = document.querySelector("#progressBar");
 
 let currentGameNum = 0;
 let changeState;
@@ -36,6 +39,8 @@ function setReactionTest(e) {
   e.preventDefault();
   const testNumberInput = document.querySelector("#reactionTestNumber");
   testNumber = Number(testNumberInput.value);
+  progress.classList.remove("hidden");
+  progressState.innerText = `0 / ${testNumber}`;
   reactionTest.classList.add("reactionTestBox", "startTest");
   reactionTest.innerText = "시작하려면 클릭하세요!";
   reactionTest.addEventListener("click", testClick);
@@ -79,6 +84,8 @@ function clickNow() {
   clickTime = new Date();
   reactionTest.classList.add("timeResult");
   currentGameNum += 1;
+  progressState.innerText = `${currentGameNum} / ${testNumber}`;
+  progressBar.value = parseInt((currentGameNum / testNumber) * 100);
   reactionTest.innerText = `${currentGameNum}회 : ${
     clickTime - startTime
   }ms\n계속하려면 클릭하세요`;
@@ -96,6 +103,7 @@ function resultPage() {
     clickTime - startTime
   }ms\n${testNumber}회의 평균 반응속도는 ${avgTime}ms 입니다\n메인화면으로 돌아가려면 클릭하세요`;
   reactionTest.addEventListener("click", resetTest);
+  progress.classList.add("hidden");
 }
 
 // 테스트를 초기화하고 메인 화면으로 돌아감
@@ -110,6 +118,7 @@ function resetTest() {
   reactionTest.innerText = "";
   currentGameNum = 0;
   resultTimes = [];
+  progressBar.value = 0;
   reactionTest.removeEventListener("click", resetTest);
   reactionTest.removeEventListener("click", testClick);
 }
