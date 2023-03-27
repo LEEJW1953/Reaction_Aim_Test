@@ -27,12 +27,18 @@ body {
 }
 #progress {
   width: 80%;
-  text-align: right;
 }
+#progress > .menuState {
+  display: flex;
+  justify-content: space-between;
+}
+/* #progress > #mainButton {
+}
+#progress > #progressState {
+} */
 #progress > #progressBar {
   width: 100%;
   height: 30px;
-  text-align: right;
 }
 .reactionTestBox {
   display: flex;
