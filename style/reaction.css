@@ -61,3 +61,18 @@ body {
 #reactionTest {
   text-align: center;
 }
+#highRecords {
+  background-color: skyblue;
+  border: solid 3px;
+  border-top: none;
+  display: flex;
+  width: 80%;
+  margin: 0 auto;
+}
+#highRecords > ol {
+  flex: auto;
+}
+#highRecords > #resetRecord {
+  width: 150px;
+  height: 30px;
+}
