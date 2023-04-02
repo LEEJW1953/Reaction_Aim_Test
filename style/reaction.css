@@ -10,7 +10,6 @@ body {
   display: none;
 }
 #testChoice {
-  height: 500px;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
@@ -58,7 +57,7 @@ body {
 .timeResult {
   background-color: skyblue;
 }
-#reactionTest {
+#test {
   text-align: center;
 }
 #highRecords {
