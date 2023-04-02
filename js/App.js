@@ -1,4 +1,5 @@
 import * as rt from "./ReactionTest.js";
+import * as at from "./AimTest.js";
 
 export const testStart = document.querySelector("#testStart");
 export const test = document.querySelector("#test");
@@ -47,16 +48,29 @@ export function setProgress() {
   progressState.innerText = `0 / ${testNumber}`;
 }
 
-// 테스트가 완료되었을 경우
-export function resultPage(key) {
+// 반응속도 테스트가 완료되었을 경우
+export function reactionResultPage(key) {
   test.classList.remove("startTest");
   avgTime = parseInt(
     resultTimes.reduce((acc, cur) => acc + cur, 0) / resultTimes.length
   );
-  test.innerText = `${rt.currentGameNumber}회 : ${
+  test.innerText = `${testNumber}회 : ${
     rt.clickTime - rt.startTime
   }ms\n${testNumber}회의 평균 반응속도는 ${avgTime}ms 입니다\n메인화면으로 돌아가려면 클릭하세요`;
-  test.addEventListener("click", rt.resetTest);
+  test.addEventListener("click", resetTest);
+  progress.classList.add("hidden");
+  showRecords(key);
+}
+
+// 에임 테스트가 완료되었을 경우
+export function aimResultPage(key) {
+  const target = document.querySelector("#target");
+  test.removeChild(target);
+  avgTime = parseInt(
+    resultTimes.reduce((acc, cur) => acc + cur, 0) / (resultTimes.length - 1)
+  );
+  test.innerText = `${testNumber}회의 평균 반응속도는 ${avgTime}ms 입니다\n메인화면으로 돌아가려면 클릭하세요`;
+  test.addEventListener("click", resetTest);
   progress.classList.add("hidden");
   showRecords(key);
 }
@@ -98,4 +112,28 @@ export function resetRecords(key) {
   });
 }
 
-mainButton.addEventListener("click", rt.resetTest);
+// 테스트를 초기화하고 메인 화면으로 돌아감
+export function resetTest(e) {
+  e.preventDefault();
+  testStart.classList.remove("hidden");
+  progress.classList.add("hidden");
+  test.classList.remove(
+    "reactionTestBox",
+    "aimTestBox",
+    "startTest",
+    "getReady",
+    "timeResult"
+  );
+  test.innerText = "";
+  // currentGameNumber = 0;
+  resultTimes.length = 0;
+  progressBar.value = 0;
+  highRecords.innerHTML = "";
+  records.classList.add("hidden");
+  test.removeEventListener("click", resetTest);
+  test.removeEventListener("click", rt.reactionClick);
+  test.removeEventListener("click", at.aimClick);
+  test.removeEventListener("click", at.missClick);
+}
+
+mainButton.addEventListener("click", resetTest);

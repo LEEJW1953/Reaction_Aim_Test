@@ -10,7 +10,8 @@ const REACTION_RECORDS_KEY = "reaction_records";
 function startReactionTest() {
   app.startTest();
   const mainButton = document.querySelectorAll("#mainButton")[1];
-  mainButton.addEventListener("click", resetTest);
+  const testForm = document.querySelector("#testForm");
+  mainButton.addEventListener("click", app.resetTest);
   testForm.addEventListener("submit", setReactionTest);
 }
 
@@ -32,7 +33,8 @@ function reactionClick() {
   } else if (app.test.classList.contains("clickNow")) {
     clickNow();
     if (currentGameNumber === app.testNumber) {
-      app.resultPage(REACTION_RECORDS_KEY);
+      currentGameNumber = 0;
+      app.reactionResultPage(REACTION_RECORDS_KEY);
     }
   }
 }
@@ -68,28 +70,6 @@ function clickNow() {
   app.resultTimes.push(currentRecord);
   app.saveRecords(currentRecord, REACTION_RECORDS_KEY);
   app.test.classList.replace("clickNow", "startTest");
-}
-
-// 테스트를 초기화하고 메인 화면으로 돌아감
-export function resetTest(e) {
-  e.preventDefault();
-  testStart.classList.remove("hidden");
-  progress.classList.add("hidden");
-  app.test.classList.remove(
-    "reactionTestBox",
-    "aimTestBox",
-    "startTest",
-    "getReady",
-    "timeResult"
-  );
-  app.test.innerText = "";
-  currentGameNumber = 0;
-  app.resultTimes.length = 0;
-  app.progressBar.value = 0;
-  highRecords.innerHTML = "";
-  records.classList.add("hidden");
-  app.test.removeEventListener("click", resetTest);
-  app.test.removeEventListener("click", reactionClick);
 }
 
 reactionTestButton.addEventListener("click", startReactionTest);
