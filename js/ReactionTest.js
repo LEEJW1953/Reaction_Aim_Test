@@ -1,172 +1,95 @@
-const main = document.querySelector(".main");
-const reactionTestButton = document.querySelector("#reactionTestButton");
-const testStart = document.querySelector("#testStart");
-const test = document.querySelector("#test");
-const progress = document.querySelector("#progress");
-const progressState = document.querySelector("#progressState");
-const progressBar = document.querySelector("#progressBar");
-const mainButton = document.querySelector("#mainButton");
-const REACTION_RECORDS_KEY = "reaction_records";
-const records = document.querySelector("#records");
-const highRecords = document.querySelector("#highRecords");
+import * as app from "./App.js";
 
-let currentGameNum = 0;
+export let currentGameNumber = 0;
+export let startTime, clickTime;
 let changeState;
-let startTime, clickTime, avgTime, testNumber;
-let resultTimes = [];
+const reactionTestButton = document.querySelector("#reactionTestButton");
+const REACTION_RECORDS_KEY = "reaction_records";
 
-// 테스트 횟수를 입력받는 form 생성
-function startTest() {
-  testStart.classList.add("hidden");
-  const testForm = document.createElement("form");
-  testForm.setAttribute("id", "testForm");
-
-  const testNumberInput = document.createElement("input");
-  testNumberInput.setAttribute("id", "testNumber");
-  testNumberInput.setAttribute("type", "number");
-  testNumberInput.setAttribute("placeholder", "테스트 횟수를 입력해주세요");
-  testNumberInput.setAttribute("required", "");
-  testNumberInput.setAttribute("min", "1");
-
-  const startButton = document.createElement("button");
-  startButton.innerText = "테스트 시작";
-
-  test.appendChild(testForm);
-  testForm.innerHTML = "<h1>테스트 횟수를 입력해주세요</h1>";
-  testForm.appendChild(testNumberInput);
-  testForm.appendChild(startButton);
+// 반응속도 테스트 시작
+function startReactionTest() {
+  app.startTest();
+  const mainButton = document.querySelectorAll("#mainButton")[1];
+  mainButton.addEventListener("click", resetTest);
   testForm.addEventListener("submit", setReactionTest);
 }
 
-// 테스트 시작 페이지 구성
+// 반응속도 테스트 시작 페이지 구성
 function setReactionTest(e) {
   e.preventDefault();
-  const testNumberInput = document.querySelector("#testNumber");
-  testNumber = Number(testNumberInput.value);
-  progress.classList.remove("hidden");
-  progressState.innerText = `0 / ${testNumber}`;
-  test.classList.add("reactionTestBox", "startTest");
-  test.innerText = "시작하려면 클릭하세요!";
-  test.addEventListener("click", testClick);
+  app.setProgress();
+  app.test.classList.add("reactionTestBox", "startTest");
+  app.test.innerText = "시작하려면 클릭하세요!";
+  app.test.addEventListener("click", reactionClick);
 }
 
 // 화면의 상태에 따라 사용자 입력의 결과를 나타냄
-function testClick() {
-  if (test.classList.contains("startTest")) {
+function reactionClick() {
+  if (app.test.classList.contains("startTest")) {
     getReady();
-  } else if (test.classList.contains("getReady")) {
+  } else if (app.test.classList.contains("getReady")) {
     tooFast();
-  } else if (test.classList.contains("clickNow")) {
+  } else if (app.test.classList.contains("clickNow")) {
     clickNow();
-    if (currentGameNum === testNumber) {
-      resultPage();
+    if (currentGameNumber === app.testNumber) {
+      app.resultPage(REACTION_RECORDS_KEY);
     }
   }
 }
 
 // 대기 상태의 경우
 function getReady() {
-  test.innerText = "기다리세요...";
-  test.classList.replace("startTest", "getReady");
-  test.classList.remove("timeResult");
+  app.test.innerText = "기다리세요...";
+  app.test.classList.replace("startTest", "getReady");
+  app.test.classList.remove("timeResult");
   changeState = setTimeout(() => {
     startTime = new Date();
-    test.classList.replace("getReady", "clickNow");
-    test.innerText = "클릭하세요!";
+    app.test.classList.replace("getReady", "clickNow");
+    app.test.innerText = "클릭하세요!";
   }, parseInt(1000 + Math.random() * 5000));
 }
 
 // 사용자의 입력이 너무 빨랐을 경우
 function tooFast() {
   clearTimeout(changeState);
-  test.innerText = "너무 빨랐습니다!";
-  test.classList.replace("getReady", "startTest");
+  app.test.innerText = "너무 빨랐습니다!";
+  app.test.classList.replace("getReady", "startTest");
 }
 
 // 화면의 색이 바뀌었을 경우
 function clickNow() {
   clickTime = new Date();
   const currentRecord = clickTime - startTime;
-  test.classList.add("timeResult");
-  currentGameNum += 1;
-  progressState.innerText = `${currentGameNum} / ${testNumber}`;
-  progressBar.value = parseInt((currentGameNum / testNumber) * 100);
-  test.innerText = `${currentGameNum}회 : ${currentRecord}ms\n계속하려면 클릭하세요`;
-  resultTimes.push(currentRecord);
-  saveRecords(currentRecord);
-  test.classList.replace("clickNow", "startTest");
-}
-
-// 테스트가 완료되었을 경우
-function resultPage() {
-  test.classList.remove("startTest");
-  avgTime = parseInt(
-    resultTimes.reduce((acc, cur) => acc + cur, 0) / resultTimes.length
-  );
-  test.innerText = `${currentGameNum}회 : ${
-    clickTime - startTime
-  }ms\n${testNumber}회의 평균 반응속도는 ${avgTime}ms 입니다\n메인화면으로 돌아가려면 클릭하세요`;
-  test.addEventListener("click", resetTest);
-  progress.classList.add("hidden");
-  showRecords();
-}
-
-// local storage에 기록 저장
-function saveRecords(currentRecord) {
-  if (localStorage.getItem(REACTION_RECORDS_KEY) === null) {
-    localStorage.setItem(REACTION_RECORDS_KEY, "[]");
-  }
-  const recordArray = localStorage.getItem(REACTION_RECORDS_KEY);
-  const highRecord = JSON.parse(recordArray);
-  highRecord.push(currentRecord);
-  highRecord.sort((a, b) => a - b);
-  if (highRecord.length > 10) highRecord.pop();
-  localStorage.setItem(REACTION_RECORDS_KEY, JSON.stringify(highRecord));
-}
-
-// 테스트 종료 후 저장된 기록 상위 10개를 보여줌
-function showRecords() {
-  records.classList.remove("hidden");
-  const recordArray = localStorage.getItem(REACTION_RECORDS_KEY);
-  const highRecord = JSON.parse(recordArray);
-  let result = "<ol>최고기록";
-  highRecord.forEach((c) => (result += `<li>${c}ms</li>`));
-  result += "</ol>";
-  highRecords.innerHTML = result;
-  resetRecords();
-}
-
-// 기록 초기화
-function resetRecords() {
-  const resetRecordButton = document.createElement("button");
-  resetRecordButton.innerText = "기록 초기화";
-  resetRecordButton.setAttribute("id", "resetRecord");
-  highRecords.appendChild(resetRecordButton);
-
-  resetRecordButton.addEventListener("click", () => {
-    localStorage.removeItem(REACTION_RECORDS_KEY);
-  });
+  app.test.classList.add("timeResult");
+  currentGameNumber += 1;
+  app.progressState.innerText = `${currentGameNumber} / ${app.testNumber}`;
+  app.progressBar.value = parseInt((currentGameNumber / app.testNumber) * 100);
+  app.test.innerText = `${currentGameNumber}회 : ${currentRecord}ms\n계속하려면 클릭하세요`;
+  app.resultTimes.push(currentRecord);
+  app.saveRecords(currentRecord, REACTION_RECORDS_KEY);
+  app.test.classList.replace("clickNow", "startTest");
 }
 
 // 테스트를 초기화하고 메인 화면으로 돌아감
-function resetTest() {
+export function resetTest(e) {
+  e.preventDefault();
   testStart.classList.remove("hidden");
   progress.classList.add("hidden");
-  test.classList.remove(
+  app.test.classList.remove(
     "reactionTestBox",
+    "aimTestBox",
     "startTest",
     "getReady",
     "timeResult"
   );
-  test.innerText = "";
-  currentGameNum = 0;
-  resultTimes = [];
-  progressBar.value = 0;
+  app.test.innerText = "";
+  currentGameNumber = 0;
+  app.resultTimes.length = 0;
+  app.progressBar.value = 0;
   highRecords.innerHTML = "";
   records.classList.add("hidden");
-  test.removeEventListener("click", resetTest);
-  test.removeEventListener("click", testClick);
+  app.test.removeEventListener("click", resetTest);
+  app.test.removeEventListener("click", reactionClick);
 }
 
-reactionTestButton.addEventListener("click", startTest);
-mainButton.addEventListener("click", resetTest);
+reactionTestButton.addEventListener("click", startReactionTest);
