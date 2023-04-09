@@ -34,6 +34,7 @@ function reactionClick() {
     clickNow();
     if (currentGameNumber === app.testNumber) {
       currentGameNumber = 0;
+      app.test.removeEventListener("click", reactionClick);
       app.reactionResultPage(REACTION_RECORDS_KEY);
     }
   }

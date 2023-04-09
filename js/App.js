@@ -56,8 +56,8 @@ export function reactionResultPage(key) {
   );
   test.innerText = `${testNumber}회 : ${
     rt.clickTime - rt.startTime
-  }ms\n${testNumber}회의 평균 반응속도는 ${avgTime}ms 입니다\n메인화면으로 돌아가려면 클릭하세요`;
-  test.addEventListener("click", resetTest);
+  }ms\n${testNumber}회의 평균 반응속도는 ${avgTime}ms 입니다\n메인화면으로 돌아가려면 더블클릭하세요`;
+  test.addEventListener("dblclick", resetTest);
   progress.classList.add("hidden");
   showRecords(key);
 }
@@ -67,16 +67,18 @@ export function aimResultPage(key) {
   const target = document.querySelector("#target");
   test.removeChild(target);
   avgTime = parseInt(
-    resultTimes.reduce((acc, cur) => acc + cur, 0) / (resultTimes.length - 1)
+    resultTimes.reduce((acc, cur) => acc + cur, 0) / resultTimes.length
   );
-  test.innerText = `${testNumber}회의 평균 반응속도는 ${avgTime}ms 입니다\n메인화면으로 돌아가려면 클릭하세요`;
-  test.addEventListener("click", resetTest);
+  let accuracy = ((testNumber / (testNumber + at.missClicks)) * 100).toFixed(2);
+  test.innerText = `${testNumber}회의 평균 반응속도는 ${avgTime}ms 입니다\n정확도는 ${accuracy}% 입니다\n메인화면으로 돌아가려면 더블클릭하세요`;
+  test.addEventListener("dblclick", resetTest);
   progress.classList.add("hidden");
   showRecords(key);
 }
 
 // local storage에 기록 저장
 export function saveRecords(currentRecord, key) {
+  if (currentRecord === NaN) return;
   if (localStorage.getItem(key) === null) {
     localStorage.setItem(key, "[]");
   }
@@ -130,7 +132,7 @@ export function resetTest(e) {
   progressBar.value = 0;
   highRecords.innerHTML = "";
   records.classList.add("hidden");
-  test.removeEventListener("click", resetTest);
+  test.removeEventListener("dblclick", resetTest);
   test.removeEventListener("click", rt.reactionClick);
   test.removeEventListener("click", at.aimClick);
   test.removeEventListener("click", at.missClick);
