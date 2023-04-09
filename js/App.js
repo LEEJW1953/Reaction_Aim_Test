@@ -1,6 +1,7 @@
 import * as rt from "./ReactionTest.js";
 import * as at from "./AimTest.js";
 
+export const testTitle = document.querySelector(".main").querySelector("h1");
 export const testStart = document.querySelector("#testStart");
 export const test = document.querySelector("#test");
 export const mainButton = document.querySelector("#mainButton");
@@ -65,7 +66,7 @@ export function reactionResultPage(key) {
 // 에임 테스트가 완료되었을 경우
 export function aimResultPage(key) {
   const target = document.querySelector("#target");
-  test.removeChild(target);
+  if (target !== null) test.removeChild(target);
   avgTime = parseInt(
     resultTimes.reduce((acc, cur) => acc + cur, 0) / resultTimes.length
   );
@@ -110,12 +111,14 @@ export function resetRecords(key) {
   highRecords.appendChild(resetRecordButton);
   resetRecordButton.addEventListener("click", () => {
     localStorage.removeItem(key);
-    highRecords.innerHTML = "기록 초기화!";
+    highRecords.innerHTML =
+      "<style:'padding: 30px 0 30px 70px font-size: 20px font-weight: bold line-height: 30px'></style:>기록 초기화!";
   });
 }
 
 // 테스트를 초기화하고 메인 화면으로 돌아감
 export function resetTest(e) {
+  testTitle.innerText = "반응속도 & 에임 테스트";
   e.preventDefault();
   testStart.classList.remove("hidden");
   progress.classList.add("hidden");
@@ -124,12 +127,13 @@ export function resetTest(e) {
     "aimTestBox",
     "startTest",
     "getReady",
+    "clickNow",
     "timeResult"
   );
   test.innerText = "";
-  // currentGameNumber = 0;
   resultTimes.length = 0;
   progressBar.value = 0;
+  clearTimeout(rt.changeState);
   highRecords.innerHTML = "";
   records.classList.add("hidden");
   test.removeEventListener("dblclick", resetTest);

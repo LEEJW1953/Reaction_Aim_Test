@@ -1,8 +1,14 @@
 body {
   background-color: #e4d8a6;
+  font-family: "Nanum Gothic", sans-serif;
 }
 .main {
   display: flex;
+  width: 80%;
+  margin: 30px auto;
+  padding: 30px 40px 40px 30px;
+  background-color: whitesmoke;
+  border-radius: 20px;
   flex-direction: column;
   align-items: center;
 }
@@ -15,14 +21,45 @@ body {
   justify-content: space-around;
 }
 #reactionTestButton {
-  width: 80%;
+  width: 40%;
   height: 100px;
   font-size: 20px;
+  font-weight: bold;
+  border: solid;
+  border-radius: 20px;
+  background-color: lightcoral;
+  transition: all 0.5s;
+}
+#reactionTestButton:hover {
+  transform: scale(1.1);
+  background-color: lightgreen;
 }
 #aimTestButton {
-  width: 80%;
+  width: 40%;
   height: 100px;
   font-size: 20px;
+  font-weight: bold;
+  border: solid;
+  border-radius: 20px;
+  background-color: skyblue;
+  transition: all 0.5s;
+}
+#aimTestButton:hover {
+  transform: scale(1.1);
+  background-color: orange;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+#testNumber {
+  height: 40px;
+  border: 0;
+  border-radius: 15px;
+  outline: none;
+  padding-left: 10px;
+  background-color: rgb(220, 220, 220);
 }
 #progress {
   width: 80%;
@@ -31,10 +68,18 @@ body {
   display: flex;
   justify-content: space-between;
 }
-/* #progress > #mainButton {
+#startButton,
+#mainButton {
+  height: 40px;
+  border: solid 2px rgb(45, 87, 6);
+  border-radius: 15px;
 }
-#progress > #progressState {
-} */
+#startButton:hover {
+  background-color: lightgreen;
+}
+#mainButton:hover {
+  background-color: skyblue;
+}
 #progress > #progressBar {
   width: 100%;
   height: 30px;
@@ -50,6 +95,7 @@ body {
   font-weight: bold;
   cursor: pointer;
   border: solid 3px;
+  border-radius: 20px;
 }
 .clickNow {
   background-color: lightgreen;
@@ -60,18 +106,38 @@ body {
 #test {
   text-align: center;
 }
+#records {
+  width: 80%;
+  padding-top: 20px;
+}
 #highRecords {
   background-color: skyblue;
   border: solid 3px;
-  border-top: none;
+  border-radius: 20px;
   display: flex;
-  width: 80%;
   margin: 0 auto;
+  padding: 30px 0 30px 70px;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 30px;
 }
 #highRecords > ol {
   flex: auto;
+  padding: 30px 0 0 70px;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 30px;
 }
 #highRecords > #resetRecord {
-  width: 150px;
-  height: 30px;
+  width: 180px;
+  height: 50px;
+  margin-right: 40px;
+  border-radius: 15px;
+  font-size: 20px;
+  font-weight: bold;
+  background-color: orange;
+}
+#highRecords > #resetRecord:hover {
+  transform: scale(1.1);
+  background-color: red;
 }

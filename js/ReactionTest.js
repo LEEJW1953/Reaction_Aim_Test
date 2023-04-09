@@ -2,12 +2,13 @@ import * as app from "./App.js";
 
 export let currentGameNumber = 0;
 export let startTime, clickTime;
-let changeState;
+export let changeState;
 const reactionTestButton = document.querySelector("#reactionTestButton");
 const REACTION_RECORDS_KEY = "reaction_records";
 
 // 반응속도 테스트 시작
 function startReactionTest() {
+  app.testTitle.innerText = "반응속도 테스트";
   app.startTest();
   const mainButton = document.querySelectorAll("#mainButton")[1];
   const testForm = document.querySelector("#testForm");
@@ -74,3 +75,6 @@ function clickNow() {
 }
 
 reactionTestButton.addEventListener("click", startReactionTest);
+mainButton.addEventListener("click", () => {
+  currentGameNumber = 0;
+});

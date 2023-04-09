@@ -6,15 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style/reaction.css" />
     <link rel="stylesheet" href="style/aim.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap"
+      rel="stylesheet"
+    />
     <title>반응속도 & 에임 테스트</title>
   </head>
   <body>
     <div class="main">
+      <h1 id="'testTitle">반응속도 & 에임 테스트</h1>
       <div id="testStart">
-        <h1>원하는 테스트를 선택해주세요</h1>
+        <h2>원하는 테스트를 선택해주세요</h2>
         <div id="testChoice">
-          <button id="reactionTestButton">반응속도 테스트</button>
-          <button id="aimTestButton">에임 테스트</button>
+          <button id="reactionTestButton">반응속도<br />테스트</button>
+          <button id="aimTestButton">에임<br />테스트</button>
         </div>
       </div>
       <div id="progress" class="hidden">
@@ -25,9 +32,9 @@
         <progress id="progressBar" value="0" max="100"></progress>
       </div>
       <div id="test"></div>
-    </div>
-    <div id="records" class="hidden">
-      <div id="highRecords"></div>
+      <div id="records" class="hidden">
+        <div id="highRecords"></div>
+      </div>
     </div>
     <script type="module" src="js/App.js"></script>
     <script type="module" src="js/ReactionTest.js"></script>
