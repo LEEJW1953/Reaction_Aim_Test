@@ -55,6 +55,8 @@ input::-webkit-inner-spin-button {
 }
 #testNumber {
   height: 40px;
+  width: 200px;
+  margin: 10px;
   border: 0;
   border-radius: 15px;
   outline: none;
@@ -71,8 +73,10 @@ input::-webkit-inner-spin-button {
 #startButton,
 #mainButton {
   height: 40px;
+  width: 100px;
   border: solid 2px rgb(45, 87, 6);
   border-radius: 15px;
+  margin: 10px;
 }
 #startButton:hover {
   background-color: lightgreen;
@@ -140,4 +144,5 @@ input::-webkit-inner-spin-button {
 #highRecords > #resetRecord:hover {
   transform: scale(1.1);
   background-color: red;
+  color: white;
 }
