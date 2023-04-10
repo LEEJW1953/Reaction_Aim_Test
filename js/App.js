@@ -10,6 +10,7 @@ export const progressState = document.querySelector("#progressState");
 export const progressBar = document.querySelector("#progressBar");
 export let avgTime, testNumber;
 export let resultTimes = [];
+let accuracy;
 const records = document.querySelector("#records");
 const highRecords = document.querySelector("#highRecords");
 
@@ -24,7 +25,7 @@ export function startTest() {
   testNumberInput.setAttribute("type", "number");
   testNumberInput.setAttribute("placeholder", "테스트 횟수를 입력해주세요");
   testNumberInput.setAttribute("required", "");
-  testNumberInput.setAttribute("min", "1");
+  testNumberInput.setAttribute("min", "5");
 
   const startButton = document.createElement("button");
   startButton.setAttribute("id", "startButton");
@@ -70,10 +71,13 @@ export function aimResultPage(key) {
   avgTime = parseInt(
     resultTimes.reduce((acc, cur) => acc + cur, 0) / resultTimes.length
   );
-  let accuracy = ((testNumber / (testNumber + at.missClicks)) * 100).toFixed(2);
+  accuracy = parseInt(
+    ((testNumber / (testNumber + at.missClicks)) * 100).toFixed(2)
+  );
   test.innerText = `${testNumber}회의 평균 반응속도는 ${avgTime}ms 입니다\n정확도는 ${accuracy}% 입니다\n메인화면으로 돌아가려면 더블클릭하세요`;
   test.addEventListener("dblclick", resetTest);
   progress.classList.add("hidden");
+  saveRecords(avgTime, key);
   showRecords(key);
 }
 
@@ -85,8 +89,19 @@ export function saveRecords(currentRecord, key) {
   }
   const recordArray = localStorage.getItem(key);
   const highRecord = JSON.parse(recordArray);
-  highRecord.push(currentRecord);
-  highRecord.sort((a, b) => a - b);
+  if (key === "aim_records") {
+    highRecord.push([accuracy, currentRecord]);
+    highRecord.sort((a, b) => {
+      if (a[0] === b[0]) {
+        return a[1] - b[1];
+      } else {
+        return b[0] - a[0];
+      }
+    });
+  } else {
+    highRecord.push(currentRecord);
+    highRecord.sort((a, b) => a - b);
+  }
   if (highRecord.length > 10) highRecord.pop();
   localStorage.setItem(key, JSON.stringify(highRecord));
 }
@@ -97,7 +112,11 @@ export function showRecords(key) {
   const recordArray = localStorage.getItem(key);
   const highRecord = JSON.parse(recordArray);
   let result = "<ol>최고기록";
-  highRecord.forEach((c) => (result += `<li>${c}ms</li>`));
+  if (key === "aim_records") {
+    highRecord.forEach((c) => (result += `<li>${c[0]}%, ${c[1]}ms</li>`));
+  } else {
+    highRecord.forEach((c) => (result += `<li>${c}ms</li>`));
+  }
   result += "</ol>";
   highRecords.innerHTML = result;
   resetRecords(key);

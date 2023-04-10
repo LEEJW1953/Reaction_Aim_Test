@@ -36,7 +36,6 @@ function aimClick() {
     clickTime = new Date();
     const currentRecord = clickTime - startTime;
     app.resultTimes.push(currentRecord);
-    app.saveRecords(currentRecord, AIM_RECORDS_KEY);
     currentGameNumber = 0;
     app.aimResultPage(AIM_RECORDS_KEY);
   } else {
@@ -46,8 +45,6 @@ function aimClick() {
     clickTime = new Date();
     if (currentGameNumber !== 1) {
       app.resultTimes.push(currentRecord);
-      if (currentRecord !== NaN)
-        app.saveRecords(currentRecord, AIM_RECORDS_KEY);
     }
     document.querySelector("#target").addEventListener("click", aimClick);
   }
