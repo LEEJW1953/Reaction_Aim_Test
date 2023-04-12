@@ -20,7 +20,7 @@ function startAimTest() {
 function setAimTest(e) {
   e.preventDefault();
   app.setProgress();
-  missClicks = -app.testNumber;
+  missClicks = 0;
   app.test.classList.add("aimTestBox");
   app.test.innerText = "시작하려면 클릭하세요!";
   app.test.addEventListener("click", aimClick);
@@ -30,9 +30,8 @@ function setAimTest(e) {
 // 화면의 상태에 따라 사용자 입력의 결과를 나타냄
 function aimClick() {
   app.test.removeEventListener("click", aimClick);
+  app.test.removeEventListener("click", missClick);
   if (currentGameNumber >= app.testNumber) {
-    app.test.removeEventListener("click", aimClick);
-    app.test.removeEventListener("click", missClick);
     clickTime = new Date();
     const currentRecord = clickTime - startTime - 1400;
     app.resultTimes.push(currentRecord);
@@ -71,20 +70,14 @@ function setTarget() {
     "style",
     `position:relative; left:${randomX}px; top:${randomY}px`
   );
-  const innerTarget1 = document.createElement("div");
-  const innerTarget2 = document.createElement("div");
-  const innerTarget3 = document.createElement("div");
-  innerTarget1.setAttribute("id", "innerTarget1");
-  innerTarget2.setAttribute("id", "innerTarget2");
-  innerTarget3.setAttribute("id", "innerTarget3");
-  target.appendChild(innerTarget1);
-  target.appendChild(innerTarget2);
-  target.appendChild(innerTarget3);
+  target.innerHTML =
+    '<i class="fa-solid fa-bullseye" style="color: #ff0000;""></i>';
   setTimeout(() => {
     app.test.appendChild(target);
+    app.test.addEventListener("click", missClick);
   }, 700);
   startTime = new Date() - 700;
-  target.addEventListener("click", aimClick);
+  target.addEventListener("click", aimClick, { once: true });
 }
 
 // 타겟이 아닌 빈 공간을 클릭했을 경우
