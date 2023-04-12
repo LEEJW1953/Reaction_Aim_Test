@@ -34,19 +34,18 @@ function aimClick() {
     app.test.removeEventListener("click", aimClick);
     app.test.removeEventListener("click", missClick);
     clickTime = new Date();
-    const currentRecord = clickTime - startTime;
+    const currentRecord = clickTime - startTime - 1400;
     app.resultTimes.push(currentRecord);
     currentGameNumber = 0;
     app.aimResultPage(AIM_RECORDS_KEY);
   } else {
-    app.test.innerText = "";
+    if (currentGameNumber === 0) app.test.innerText = "";
     setTarget();
     const currentRecord = startTime - clickTime;
     clickTime = new Date();
     if (currentGameNumber !== 1) {
       app.resultTimes.push(currentRecord);
     }
-    document.querySelector("#target").addEventListener("click", aimClick);
   }
 }
 
@@ -57,18 +56,20 @@ function setTarget() {
   app.progressBar.value = parseInt(
     ((currentGameNumber - 1) / app.testNumber) * 100
   );
-  startTime = new Date();
   let hasTarget = document.querySelector("#target");
-  if (hasTarget !== null) app.test.removeChild(hasTarget);
-  const randomX =
-    ((Math.random() - Math.random()) * (app.test.clientWidth - 100)) / 2;
-  const randomY =
-    ((Math.random() - Math.random()) * (app.test.clientHeight - 100)) / 2;
+  if (hasTarget !== null) {
+    hasTarget.classList.add("fadeOut");
+    setTimeout(() => {
+      app.test.removeChild(hasTarget);
+    }, 480);
+  }
+  const randomX = ((2 * Math.random() - 1) * (app.test.clientWidth - 100)) / 2;
+  const randomY = ((2 * Math.random() - 1) * (app.test.clientHeight - 100)) / 2;
   const target = document.createElement("div");
   target.setAttribute("id", "target");
   target.setAttribute(
     "style",
-    `transform: translate(${randomX}px, ${randomY}px)`
+    `position:relative; left:${randomX}px; top:${randomY}px`
   );
   const innerTarget1 = document.createElement("div");
   const innerTarget2 = document.createElement("div");
@@ -79,7 +80,11 @@ function setTarget() {
   target.appendChild(innerTarget1);
   target.appendChild(innerTarget2);
   target.appendChild(innerTarget3);
-  app.test.appendChild(target);
+  setTimeout(() => {
+    app.test.appendChild(target);
+  }, 700);
+  startTime = new Date() - 700;
+  target.addEventListener("click", aimClick);
 }
 
 // 타겟이 아닌 빈 공간을 클릭했을 경우
